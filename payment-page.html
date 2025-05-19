@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CDC Voucher Payment</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Confirm payment for your CDC Voucher purchase.">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f9f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #007e8c;
+      text-align: center;
+    }
+
+    header img {
+      width: 100%;
+      max-width: 768px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .container {
+      max-width: 500px;
+      background: #fff;
+      margin: 30px auto;
+      padding: 30px 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+    }
+
+    h1 {
+      font-size: 24px;
+      text-align: center;
+      color: #007e8c;
+      margin-bottom: 20px;
+    }
+
+    .summary {
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
+
+    .summary strong {
+      display: block;
+      margin-top: 10px;
+    }
+
+    .qr-section {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .qr-section img {
+      width: 250px;
+      height: auto;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+
+    .button {
+      display: inline-block;
+      background-color: #007e8c;
+      color: white;
+      text-decoration: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-size: 16px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      background-color: #005e6a;
+    }
+
+    form {
+      text-align: center;
+    }
+
+    input[type="file"] {
+      margin-top: 10px;
+      padding: 8px;
+    }
+
+    @media screen and (max-width: 600px) {
+      .container {
+        margin: 20px;
+        padding: 20px 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="https://singxsavor.github.io/cdcvoucher/cdc-logo.png" alt="CDC Logo">
+</header>
+
+<div class="container">
+  <h1>Confirm Your Payment</h1>
+  <div class="summary" id="orderSummary">
+    <strong>Name:</strong> <span id="name">Loading...</span>
+    <strong>Email:</strong> <span id="email">Loading...</span>
+    <strong>Contact Number:</strong> <span id="contact">Loading...</span>
+    <strong>Product:</strong> CDC Voucher Package — $500 value
+    <strong>Quantity:</strong> <span id="qty">0</span>
+    <strong>Total Amount:</strong> $<span id="amount">0</span>
+  </div>
+
+  <div class="qr-section">
+    <p><strong>Please scan QR Code to Pay</strong></p>
+    <img src="https://singxsavor.github.io/cdcvoucher/paynowqrcode.png" alt="PayNow QR Code">
+    <br>
+    <a class="button" download="cdc-paynow-qr.png" href="https://singxsavor.github.io/cdcvoucher/paynowqrcode.png">Save QR to Gallery</a>
+  </div>
+
+  <form action="https://formsubmit.co/corporate@singxsavor.com" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="_redirect" value="https://singxsavor.github.io/cdcvoucher/thank-you.html">
+    <input type="hidden" name="_subject" value="CDC Voucher Payment Receipt">
+    <input type="hidden" name="name" id="formName">
+    <input type="hidden" name="email" id="formEmail">
+    <input type="hidden" name="contact" id="formContact">
+    <input type="hidden" name="amount" id="formAmount">
+    <input type="file" name="receipt" accept="image/*,.pdf" required>
+    <br>
+    <button type="submit" class="button">Upload Receipt</button>
+  </form>
+</div>
+
+<script>
+  function getParam(param) {
+    const url = new URLSearchParams(window.location.search);
+    return url.get(param) || "";
+  }
+
+  const name = decodeURIComponent(getParam("name"));
+  const email = decodeURIComponent(getParam("email"));
+  const contact = decodeURIComponent(getParam("contact"));
+  const amount = parseInt(getParam("F12_Amount")) || 0;
+  const qty = amount / 150;
+
+  // Fill data into HTML
+  document.getElementById("name").textContent = name;
+  document.getElementById("email").textContent = email;
+  document.getElementById("contact").textContent = contact;
+  document.getElementById("amount").textContent = amount.toFixed(2);
+  document.getElementById("qty").textContent = qty;
+
+  // Fill data into hidden form
+  document.getElementById("formName").value = name;
+  document.getElementById("formEmail").value = email;
+  document.getElementById("formContact").value = contact;
+  document.getElementById("formAmount").value = amount.toFixed(2);
+</script>
+
+</body>
+</html>
